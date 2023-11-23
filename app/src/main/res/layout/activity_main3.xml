@@ -17,12 +17,12 @@
         />
 
     <ListView
-        android:id="@+id/listview"
+        android:id="@+id/list_view"
         android:layout_width="412dp"
         android:layout_height="686dp"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="45dp"
 
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
