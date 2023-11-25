@@ -24,7 +24,7 @@ public class MainActivity4 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main4);
+        setContentView(R.layout.activity_update);
         editText5=(EditText) findViewById(R.id.editText5);
         String inputTest = load();
         if(!TextUtils.isEmpty(inputTest)){
