@@ -16,7 +16,7 @@
             android:name=".MainActivity4"
             android:exported="false" />
         <activity
-            android:name=".UpdateActivity"
+            android:name=".MainActivity3"
             android:exported="false" />
         <activity
             android:name=".MainActivity2"
