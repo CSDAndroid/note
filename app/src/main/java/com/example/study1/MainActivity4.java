@@ -56,7 +56,16 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
 //实现onClick这个接口
     @Override
     public void onClick(View v) {
-        int id = v.getId();
+        int id = v.getId();///
+
+        if(id==R.id.delete){//返回上一页没必要做一个意图的跳转，只需要把当前界面销毁即可，把要返回的那个界面变成栈顶
+            et_Content.setText("");//执行编辑框的内容设为空
+        }
+
+        if(id==R.id.backhome){//返回上一页没必要做一个意图的跳转，只需要把当前界面销毁即可，把要返回的那个界面变成栈顶
+           //关闭当前的活动页面
+            finish();
+        }
         if (id == R.id.save_note){
             // 获取编辑文本的内容
             String content=et_Content.getText().toString();
