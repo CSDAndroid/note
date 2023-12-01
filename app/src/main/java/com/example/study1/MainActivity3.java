@@ -1,14 +1,19 @@
 package com.example.study1;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,27 +31,75 @@ public class MainActivity3 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
-        listView.findViewById(R.id.listview);//找到这个对象
+        listView = listView.findViewById(R.id.listview);//找到这个对象
         add = findViewById(R.id.add);
-        add.setOnClickListener(new View.OnClickListener() {//定义一个add的点击事件
-            @Override
-            public void onClick(View view) {
-                //点击添加按钮，跳转编辑的页面进行数据的添加
-                Intent intent = new Intent(MainActivity3.this, MainActivity4.class);
-                //startActivity(intent);//这个的话只能简单的执行跳转页面
-                //数据回传,跳转之后期望第二个页面回传数据
-                startActivityForResult(intent, 1);
-            }
+        //定义一个add的点击事件
+        add.setOnClickListener(view -> {
+            //点击添加按钮，跳转编辑的页面进行数据的添加
+            Intent intent = new Intent(MainActivity3.this, MainActivity4.class);
+            //startActivity(intent);//这个的话只能简单的执行跳转页面
+            //数据回传,跳转之后期望第二个页面回传数据
+            startActivityForResult(intent, 1);
         });
         //执行一个init方法进行数据的初始化
         init();
-        //设置列表下的点击监听器
+        //设置列表下的点击监听器，对相应内容进行更新
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //当列表项被点击时，对该项的内容进行修改操作
+                Note note= (Note) myAdapter.getItem(i);//通过i把要修改的记录找出来
+                //创建意图，将用户选中的内容传递到修改的页面
+                Intent intent=new Intent(MainActivity3.this,MainActivity4.class);
+                //把原先笔记的值放在这个内容中
+                String sendId=note.getId();
+                String sendContent=note.getContent();
+                String sendTime=note.getNote_time();
+                intent.putExtra("id",sendId);
+                intent.putExtra("content",sendContent);
+                intent.putExtra("time",sendTime);
+                startActivityForResult(intent,1);
             }
         });//一个新的监听器，监听用户点击目录下的哪一条item
+
+
+        //列表项长按监听器，删除对应项的内容
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //显示对话框删除
+                AlertDialog dialog=null;
+                AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity3.this);
+                AlertDialog finalDialog = dialog;
+                builder.setTitle("删除记录")
+                        .setMessage("你确定要删除这条记录吗？")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {//第二个参数是加个监听器
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //确定要删除的记录是哪一条
+                                Note note= (Note) myAdapter.getItem(i);//把object强制转换为Note的子类对象
+                                String deleteId=note.getId();
+                                if( myDBhelper.deleteData(deleteId)){//调用删除的方法，只需要传入id就行，方法里定义的
+                                    init();//刷新数据
+                                    Toast.makeText(MainActivity3.this, "删除成功！", Toast.LENGTH_SHORT).show();
+                                }else {
+                                    Toast.makeText(MainActivity3.this, "删除不成功！", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                finalDialog.dismiss();//让对话框消失
+                            }
+                        });
+                dialog=builder.create();//产生对话框对象
+                dialog.show();
+                return true;
+            }
+        });
+
+
     }
     //这个方法用来查询数据库的内容，将表中的数据显在listview上面
     private void init(){
@@ -58,25 +111,15 @@ public class MainActivity3 extends AppCompatActivity {
         myAdapter=new MyAdapter(MainActivity3.this,resulList);
         listView.setAdapter(myAdapter);
     }//对方法的设计
+
+
+//数据回传时自动执行的方法，用于接受回传过来的数据
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==1&&resultCode==2){
+            //说明数据的添加操作正常执行，数据库新增加了一条记录，主页中listview的内容就应该更新一下
+            init();
+        }
+    }
 }
-
-
-
-
-
-
-
-
-
-//    @Override
-//    protected  void onResume(){
-//        super.onResume();
-//        Object adapter;
-//        listView.setAdapter(adapter);
-//    }
-//}
-
-//        ArrayAdapter<String>adapter=new ArrayAdapter<String>(
-//        MainActivity3.this, android.R.layout.simple_list_item_1,data);
-//        @SuppressLint("MissingInflatedId") ListView listView=(ListView) findViewById(R.id.list_view);
-//        listView.setAdapter(adapter);
