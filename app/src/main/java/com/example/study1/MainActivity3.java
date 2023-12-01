@@ -1,4 +1,4 @@
-package com.example.study1;
+package com.example.study1;//目录的功能文件
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
