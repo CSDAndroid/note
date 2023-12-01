@@ -88,6 +88,6 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
     }
 }
 
-
+//
 //不能用switch，代码中出现 "Constant expression required" 错误，是因为在 Android 中，库项目中的资源标识符不是真正的常量，因此不能在 switch 语句中使用。
 // 这是因为从 Android Gradle Plugin 8.0.0 开始，//资源（如 R.id. ）不再被声明为 final（即常量表达式），这是为了优化构建速度，这是在 switch 语句中使用的先决条件5。
