@@ -31,7 +31,7 @@ public class MainActivity3 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
-        listView = listView.findViewById(R.id.listview);//找到这个对象
+        listView = findViewById(R.id.listview);//找到这个对象
         add = findViewById(R.id.add);
         //定义一个add的点击事件
         add.setOnClickListener(view -> {
@@ -66,7 +66,7 @@ public class MainActivity3 extends AppCompatActivity {
         //列表项长按监听器，删除对应项的内容
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
                 //显示对话框删除
                 AlertDialog dialog=null;
                 AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity3.this);
@@ -77,7 +77,7 @@ public class MainActivity3 extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 //确定要删除的记录是哪一条
-                                Note note= (Note) myAdapter.getItem(i);//把object强制转换为Note的子类对象
+                                Note note= (Note) myAdapter.getItem(position);//把object强制转换为Note的子类对象
                                 String deleteId=note.getId();
                                 if( myDBhelper.deleteData(deleteId)){//调用删除的方法，只需要传入id就行，方法里定义的
                                     init();//刷新数据
@@ -90,7 +90,7 @@ public class MainActivity3 extends AppCompatActivity {
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                finalDialog.dismiss();//让对话框消失
+                                dialogInterface.dismiss();//让对话框消失
                             }
                         });
                 dialog=builder.create();//产生对话框对象

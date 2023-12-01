@@ -18,12 +18,12 @@
             android:layout_centerVertical="true"
             android:backgroundTint="#DF4F65FF"
             android:text="返回"
-            android:textSize="18sp"></Button>
+            android:textSize="18sp"/>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/baiyun1"></ImageView>
+            android:src="@drawable/baiyun1"/>
     </RelativeLayout>
 <!-- 添加一个隐藏起来的textview，符合一定条件则让他显示出来  -->
     <TextView
@@ -41,7 +41,7 @@
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="600dp"
-        android:hint="请输入文本信息..."></EditText>
+        android:hint="请输入文本信息..."/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -53,14 +53,14 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/delete"></ImageView>
+            android:src="@drawable/delete"/>
 
         <ImageView
             android:id="@+id/save_note"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/save"></ImageView>
+            android:src="@drawable/save"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/title"
-        android:layout_marginTop="2dp"></ListView>
+        android:layout_marginTop="2dp"/>
 
     <ImageView
         android:layout_width="156dp"
