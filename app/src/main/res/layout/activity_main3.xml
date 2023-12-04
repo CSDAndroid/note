@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:text=" 目录"
         android:id="@+id/title"
+        android:gravity="center"
         android:textSize="30sp"
         android:textColor="@color/black"
         android:background="#DF4F65FF">
@@ -20,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/title"
-        android:layout_marginTop="2dp"/>
+        android:layout_marginTop="50dp"/>
 
     <ImageView
         android:layout_width="156dp"
@@ -30,11 +31,19 @@
         android:layout_marginBottom="0dp"
         android:paddingBottom="30dp"
         android:id="@+id/add"
-        android:src="@drawable/add" >
-    </ImageView>
+        android:src="@drawable/add" />
 
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
+    <!--    <TextView-->
+<!--        android:id="@+id/showInfo"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:text="" /> -->
 
-<!--目录的布局文件代码.. -->
+    <!--目录的布局文件代码.. -->
 
 </RelativeLayout>

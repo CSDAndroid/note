@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void myClick(View view) {
         //显示意图的使用方法实现页面的跳转
-        Intent intent=new Intent(MainActivity.this,MainActivity4.class);
+        Intent intent=new Intent(MainActivity.this,MainActivity3.class);
         this.startActivity(intent);
     }
 

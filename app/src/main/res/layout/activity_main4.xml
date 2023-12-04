@@ -27,21 +27,20 @@
     </RelativeLayout>
 <!-- 添加一个隐藏起来的textview，符合一定条件则让他显示出来  -->
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/showTime"
-        android:textColor="#ADF60F0F"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
         android:layout_gravity="center"
         android:text="显示时间。。。"
-        android:visibility="invisible"
-        android:textSize="30sp">
-    </TextView>
+        android:textColor="#ADF60F0F"
+        android:textSize="30sp"
+        android:visibility="invisible"></TextView>
 
     <EditText
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="600dp"
-        android:hint="请输入文本信息..."/>
+        android:hint="请输入文本信息..." />
 
     <LinearLayout
         android:layout_width="match_parent"

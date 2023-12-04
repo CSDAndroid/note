@@ -3,16 +3,20 @@ package com.example.study1;//目录的功能文件
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -22,19 +26,24 @@ public class MainActivity3 extends AppCompatActivity {
 
 //    private String[] data ={"Day1","Day2","Day3","Day4","Day5","Day6","Day7","Day8","Day9","Day10"};
 
+    //下面的代码要用到哪个控件，就先在前面声明一下相应的对象，类似的，可以通过调用这些对象来操作这些组件，对象名可以和id不同，id是用来找到控件所在处而已
     private ListView listView;
     private ImageView add;
     private  MyDBhelper myDBhelper;//查询的过程通过该类（多个方法完成）
     private MyAdapter myAdapter;//显示数据需要适配器
     private List<Note> resulList;
+//    private SearchView searchView=findViewById(R.id.searchView);
+//    private SQLiteDatabase db;
+//    private TextView showInfo=findViewById(R.id.showInfo);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
-        listView = findViewById(R.id.listview);//找到这个对象
+        listView = findViewById(R.id.listview);//开始初始化这些控件对象，即找到这个对象对应的控件，即对这个对象下个定义
         add = findViewById(R.id.add);
-        //定义一个add的点击事件
-        add.setOnClickListener(view -> {
+        //定义一个add的点击事件，格式是对象名字.方法名字，括号里的参数写的是新创建一个监听器对象，格式是new View.OnClickListener
+        add.setOnClickListener(view -> {//当点击按钮时会触发这个监听器里的代码
             //点击添加按钮，跳转编辑的页面进行数据的添加
             Intent intent = new Intent(MainActivity3.this, MainActivity4.class);
             //startActivity(intent);//这个的话只能简单的执行跳转页面
@@ -43,12 +52,14 @@ public class MainActivity3 extends AppCompatActivity {
         });
         //执行一个init方法进行数据的初始化
         init();
+
+
         //设置列表下的点击监听器，对相应内容进行更新
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 //当列表项被点击时，对该项的内容进行修改操作
-                Note note= (Note) myAdapter.getItem(i);//通过i把要修改的记录找出来
+                Note note= (Note) myAdapter.getItem(position);//通过po把要修改的记录找出来
                 //创建意图，将用户选中的内容传递到修改的页面
                 Intent intent=new Intent(MainActivity3.this,MainActivity4.class);
                 //把原先笔记的值放在这个内容中
@@ -66,7 +77,7 @@ public class MainActivity3 extends AppCompatActivity {
         //列表项长按监听器，删除对应项的内容
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
                 //显示对话框删除
                 AlertDialog dialog=null;
                 AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity3.this);
@@ -98,6 +109,58 @@ public class MainActivity3 extends AppCompatActivity {
                 return true;
             }
         });
+
+//        //给搜索按钮新增一个监听器
+//        searchView.setOnClickListener(view -> {//当点击按钮时会触发这个监听器里的代码
+//           db=myDBhelper.getWritableDatabase();
+//           //结果集类，结果集中会有一个游标，游标会指向结果集中的某一条记录，游标指向哪条记录，获取的记录就是哪一条，初始时指向第一条记录
+//           Cursor cursor=db.query("noteInfo",null,null,null,null,null,null,null);
+//           cursor.moveToFirst();
+//           showInfo.setText(cursor.getString(2));
+//           cursor.close();
+//           db.close();
+//        });
+
+
+//        //初始化searchView
+//        SearchView searchView = findViewById(R.id.searchView);
+//        //加个监听器
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                // This method is called when the user submits a query.
+//                // Here you can implement the logic to filter your notes.
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                // This method is called when the query text is changed by the user.
+//                // Here you can implement the logic to filter your notes.
+//                return false;
+//            }
+//        });
+
+
+
+//        private void filterNotes (String query) {
+//            if (query == null || resulList == null || myAdapter == null || listView == null) {
+//                return;
+//            }
+//
+//            List<Note> filteredNotes = new ArrayList<>();
+//
+//            for (Note note : resulList) {
+//                String content = note.getContent();
+//                if (content != null && content.toLowerCase().contains(query.toLowerCase())) {
+//                    filteredNotes.add(note);
+//                }
+//            }
+//
+//            myAdapter = new MyAdapter(MainActivity3.this, filteredNotes);
+//            listView.setAdapter(myAdapter);
+//        }
+
 
 
     }
