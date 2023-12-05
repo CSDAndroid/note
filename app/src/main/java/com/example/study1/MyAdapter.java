@@ -1,27 +1,37 @@
 package com.example.study1;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //数据适配器，用来给listview加载数据用的,然后又创建了四个方法,而且适配器中提供的数据应该来自数据库，取到数据才能用上这个适配器2
-public class MyAdapter extends BaseAdapter {
+public class MyAdapter extends BaseAdapter implements Filterable {
     //使用list<Note>,list集合会存储数据库中note表的所有记录.....适配器的数据来自于list
     //此行声明一个 List<Note> 类型的私有实例变量 list 。该列表将存储适配器将在 ListView 中显示的数据
     private List<Note> list;
     //layoutInflater用于将某个布局转化为View对象，类似于简化打包
     private LayoutInflater layoutInflater;
-
+    private List<Note> mOriginalValues;
+    private List<Note> mDisplayedValues;
+    private LayoutInflater mInflater;
+    private ItemFilter mFilter = new ItemFilter();
     //当创建MyAdapter适配器对象时，我们需要先准备好list的数据，为了拿到list的数据，可以为MyAdapter这个类加上一个构造器
     //使得创造适配器对象之前，list先初始化好，下面就可以直接用数据了
     public  MyAdapter(Context context,List<Note> list){   //两个参数，第一个是存了数据库中所有记录内容的list，第二个是传入上下文，即在哪个界面上调用的适配器，把activity传来
         layoutInflater=layoutInflater.from(context);   //从哪个界面（content）中拿到布局对象
         this.list=list;
+        this.mOriginalValues = list;
+        this.mDisplayedValues = list;
+        mInflater = LayoutInflater.from(context);
     }//这是MyAdapter类的构造函数
     @Override
     public int getCount() {
@@ -64,4 +74,37 @@ public class MyAdapter extends BaseAdapter {
             t_time=view.findViewById(R.id.item_time);
         }
     }
+    @Override
+    public Filter getFilter() {
+        return mFilter;
+    }
+
+    private class ItemFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+            if (TextUtils.isEmpty(constraint)) {
+                results.values = mOriginalValues;
+                results.count = mOriginalValues.size();
+            } else {
+                List<Note> filteredList = new ArrayList<>();
+                for (Note note : mOriginalValues) {
+                    if (note.getContent().toLowerCase().contains(constraint.toString().toLowerCase())) {//
+                        filteredList.add(note);
+                    }
+                }
+                results.values = filteredList;
+                results.count = filteredList.size();
+            }
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mDisplayedValues = (List<Note>) results.values;
+            notifyDataSetChanged();
+        }
+    }
+
+
 }

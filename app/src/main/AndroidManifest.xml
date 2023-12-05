@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
 
     <application
@@ -20,12 +23,14 @@
         android:theme="@style/Theme.Study1"
         tools:targetApi="31">
         <activity
+            android:name=".SearchActivity5"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity4"
             android:exported="false" />
         <activity
             android:name=".MainActivity3"
             android:exported="true" />
-
         <activity
             android:name=".MainActivity2"
             android:exported="false" />
@@ -33,13 +38,11 @@
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-
-
     </application>
 
 </manifest>

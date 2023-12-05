@@ -4,24 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity3">
+    tools:context=".MainActivity3"
+    tools:ignore="ExtraText">
+
     <TextView
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=" 目录"
-        android:id="@+id/title"
+        android:background="#DF4F65FF"
         android:gravity="center"
-        android:textSize="30sp"
+        android:text=" 目录"
         android:textColor="@color/black"
-        android:background="#DF4F65FF">
-    </TextView>
+        android:textSize="30sp"></TextView>
 
     <ListView
         android:id="@+id/listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/title"
-        android:layout_marginTop="50dp"/>
+        android:layout_below="@+id/title" />
 
     <ImageView
         android:layout_width="156dp"
@@ -33,11 +33,49 @@
         android:id="@+id/add"
         android:src="@drawable/add" />
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@+id/search"
+        android:layout_width="30dp"
+        android:layout_height="27dp"
+        android:layout_alignBottom="@+id/title"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="369dp"
+        android:layout_marginBottom="7dp"
+        android:src="@drawable/search" />
 
+    <!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:layout_below="@+id/title"-->
+<!--        android:orientation="horizontal">-->
+<!--    <Button-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_weight="2"-->
+<!--        android:id="@+id/select"-->
+<!--        android:text="搜索"-->
+<!--        android:textSize="16sp"-->
+<!--        />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="8"-->
+<!--            android:id="@+id/showInfo"-->
+<!--            android:text="显示搜索文本" />-->
+<!--    </LinearLayout>-->
+
+
+<!--    <ListView-->
+<!--        android:id="@+id/list"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_marginTop="100dp"-->
+<!--        android:background="#969696" />-->
     <!--    <TextView-->
 <!--        android:id="@+id/showInfo"-->
 <!--        android:layout_width="match_parent"-->

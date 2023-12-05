@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
@@ -41,7 +42,6 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
         backHome.setOnClickListener(this);
         delete.setOnClickListener(this);//都增加这个监听器
         saveNote.setOnClickListener(this);
-
     }
     //获取控件对象
     private void init(){
@@ -85,6 +85,14 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
                 }
             }
         }
+//        if(id ==R.id.select){
+//            SQLiteDatabase db = myDBhelper.getWritableDatabase();
+//            Cursor cursor=db.query("noteInfo",new String[]{"content"},null,null,null,null,null);
+//            cursor.moveToFirst();
+//            showInfo.setText(cursor.getString(2));
+//            cursor.close();
+//            db.close();
+//        }
     }
 }
 
