@@ -76,7 +76,7 @@ public class MyDBhelper extends SQLiteOpenHelper {//子承父类，名为mydb的
             String time = simpleDateFormat.format(date);//格式化日期
             ContentValues contentValues=new ContentValues();
             contentValues.put("content", updateContent);
-            contentValues.put("time", time);
+            contentValues.put("note_time", time);/////注意双引号“”里面的内容必须和数据库的字段名一致
             int i=db.update("noteInfo",contentValues,"id=?",new String[]{updateId});
             if (i > 0) {
                 return true;

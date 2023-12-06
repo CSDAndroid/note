@@ -68,6 +68,14 @@ public class MainActivity3 extends AppCompatActivity{
             //startActivity(intent);//这个的话只能简单的执行跳转页面
             //数据回传,跳转之后期望第二个页面回传数据
             startActivityForResult(intent, 1);
+            String TAG = null;
+            Log.d(TAG, "This is a debug log.");
+            Log.i(TAG, "This is an info log.");
+            Log.w(TAG, "This is a warning log.");
+            Log.e(TAG, "This is an error log.");
+            Log.v(TAG, "This is a verbose log.");
+
+
         });
         //执行一个init方法进行数据的初始化
         init();
@@ -86,7 +94,7 @@ public class MainActivity3 extends AppCompatActivity{
                 String sendContent=note.getContent();
                 String sendTime=note.getNote_time();
                 intent.putExtra("id",sendId);
-                intent.putExtra("content",sendContent);
+                intent.putExtra("content",sendContent);/////打包数据
                 intent.putExtra("time",sendTime);
                 startActivityForResult(intent,1);
             }

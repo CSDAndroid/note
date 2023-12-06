@@ -42,6 +42,13 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
         backHome.setOnClickListener(this);
         delete.setOnClickListener(this);//都增加这个监听器
         saveNote.setOnClickListener(this);
+
+        // 获取Intent中传递的内容
+        String contentFromIntent = getIntent().getStringExtra("content");
+        if (contentFromIntent != null) {
+            et_Content.setText(contentFromIntent);
+            init();
+        }
     }
     //获取控件对象
     private void init(){
@@ -68,32 +75,41 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
         }
         if (id == R.id.save_note){
             // 获取编辑文本的内容
-            String content=et_Content.getText().toString();
+            String content=et_Content.getText().toString();//获取文本编辑框（EditText）中的内容，并将其转换为字符串
             if(content==null){
+
                 Toast.makeText(MainActivity4.this,"内容不能为空！！",Toast.LENGTH_SHORT).show();//Toast在编辑页面弹出来
             }else{
-                // 数据的添加，调用MyDBhelper的方法，首先要有对象
+                // 数据的添加或更新，调用MyDBhelper的方法，首先要有对象
                 myDBhelper=new MyDBhelper(MainActivity4.this,"note.db",null,1);
-                Boolean flag=myDBhelper.insertData(content);
-                if(flag==true){
-                    // 如果添加成功，将数据回传的结果码设置为2
+
+                /////判断当前页面是否是编辑已有笔记的页面，即通过判断数据库中是否有此id的方法来判断
+                String noteId =getIntent().getStringExtra("id");/////注意双引号里面的内容必须与前面传数据来的时候的键名一致，不要写成noteId！在mainactivity3中用了putExtra的方法传递值来这个页面，在这个页面中可以通过键名“id”来获取传过来的数据
+            if(noteId!=null){/////注意使用这个if的判断条件
+                // 如果是，则更新原先笔记的内容
+                Boolean flag = myDBhelper.updateData(noteId, content);/////调用的是更新方法，和插入insert的方法不一样
+                if (flag == true) {
                     setResult(2);
-                    Toast.makeText(MainActivity4.this,"添加成功！！",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity4.this, "修改成功！！", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    Toast.makeText(MainActivity4.this, "修改失败！！", Toast.LENGTH_SHORT).show();
                 }
-                else {
-                    Toast.makeText(MainActivity4.this,"添加失败！！",Toast.LENGTH_SHORT).show();
+            }else {
+                //如果不是，则新增一条笔记
+                Boolean flag = myDBhelper.insertData(content);
+                if (flag == true) {
+                    //如果添加成功，将数据回传的结果码设置为2
+                    setResult(2);
+                    Toast.makeText(MainActivity4.this, "添加成功！！", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(MainActivity4.this, "添加失败！！", Toast.LENGTH_SHORT).show();
+
                 }
             }
         }
-//        if(id ==R.id.select){
-//            SQLiteDatabase db = myDBhelper.getWritableDatabase();
-//            Cursor cursor=db.query("noteInfo",new String[]{"content"},null,null,null,null,null);
-//            cursor.moveToFirst();
-//            showInfo.setText(cursor.getString(2));
-//            cursor.close();
-//            db.close();
-//        }
     }
+}
 }
 
 //
