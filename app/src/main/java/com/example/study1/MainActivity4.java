@@ -2,14 +2,19 @@ package com.example.study1;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.WindowDecorActionBar;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,13 +25,17 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.ByteArrayOutputStream;
 
 public class MainActivity4 extends AppCompatActivity implements View.OnClickListener {
-    private ImageView delete,saveNote;
+    private static final int PICK_IMAGE_REQUEST = 1;//在启动图片选择器的时候，你可以使用这个常量作为请求的标识，然后在 onActivityResult() 方法中根据这个标识来处理返回的结果。
+    private ImageView delete,saveNote,picture;
     private Button backHome;
     private TextView showTime;
     private EditText et_Content;
@@ -42,6 +51,7 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
         backHome.setOnClickListener(this);
         delete.setOnClickListener(this);//都增加这个监听器
         saveNote.setOnClickListener(this);
+        picture.setOnClickListener(this);
 
         // 获取Intent中传递的内容
         String contentFromIntent = getIntent().getStringExtra("content");
@@ -55,9 +65,9 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
         backHome=findViewById(R.id.backhome);
         delete=findViewById(R.id.delete);
         saveNote=findViewById(R.id.save_note);
-        //backHome=findViewById(R.id.backhome);
         showTime=findViewById(R.id.showTime);
         et_Content=findViewById(R.id.content);
+        picture=findViewById(R.id.picture);
     }
 
 //实现onClick这个接口
@@ -109,7 +119,45 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
             }
         }
     }
+        if(id==R.id.picture){
+            // 创建一个 Intent，指定 action 为 Intent.ACTION_PICK，表示选择内容
+            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent.setType("image/*"); // 指定要选择的内容类型为图片
+            startActivityForResult(intent, PICK_IMAGE_REQUEST); // 启动图片选择器，并等待结果
+
+        }
 }
+//重写 onActivityResult() 方法，并在其中获取选择的图片的 URI 并将其插入到笔记中。
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        Uri imageUri = data.getData();
+        // 将图片转换为字节数组
+        byte[] imageData = getByteArrayFromUri(imageUri);
+        // 将图片插入到笔记中
+        String noteId =getIntent().getStringExtra("id");
+        MyDBhelper.insertImageIntoNote(noteId, imageData);
+    }
+}
+
+    private byte[] getByteArrayFromUri(Uri uri) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return outputStream.toByteArray();
+    }
+
+
+
 }
 
 //

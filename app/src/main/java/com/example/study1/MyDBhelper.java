@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 //1.定义一个新的类，即数据库辅助类
 public class MyDBhelper extends SQLiteOpenHelper {//子承父类，名为mydb的构造函数继承自SQ类
-    private SQLiteDatabase db;//声明SQ对象，类型是SQLiteDatabase，之后就用这个db对象来操作SQ类中的方法就好了，用哪个对象都一样，因为特征一样才放在同一个类里的
+    private static SQLiteDatabase db;//声明SQ对象，类型是SQLiteDatabase，之后就用这个db对象来操作SQ类中的方法就好了，用哪个对象都一样，因为特征一样才放在同一个类里的
 
 
     //创建数据库和表
@@ -32,7 +32,7 @@ public class MyDBhelper extends SQLiteOpenHelper {//子承父类，名为mydb的
     //重写创建方法，数据库初始化的时候用于创建表或视图文件
     @Override         //定义了onGreate方法要实现的功能，这个方法在数据库第一次被创建时调用，我们可以在这个方法里创建我们的数据库表
     public void onCreate(SQLiteDatabase db) {//参数是数据库所对应的对象，用来操作数据库，，意思是你想用这个类的方法，你先传它的对象进括号里，你才能在这个方法里通过调用这个对象去使用这个类的方法
-        db.execSQL("create table noteInfo(id integer primary key autoincrement,content text,note_time text)");
+        db.execSQL("create table noteInfo(id integer primary key autoincrement,content text,note_time text,image_data blob)");
     }
 
 
@@ -99,7 +99,20 @@ public class MyDBhelper extends SQLiteOpenHelper {//子承父类，名为mydb的
         return  list;
     }
 
-        //重写升级方法
+    //将图片数据插入笔记中的方法
+    public static boolean insertImageIntoNote(String noteId, byte[] imageData) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("image_data", imageData);
+        int i = db.update("noteInfo", contentValues, "id=?", new String[]{noteId});
+        if (i > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    //重写升级方法
         @Override
         public void onUpgrade (SQLiteDatabase db,int oldVersion, int newVersion){
 

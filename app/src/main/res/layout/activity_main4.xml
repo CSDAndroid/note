@@ -24,6 +24,20 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/baiyun1"/>
+
+        <ImageView
+            android:layout_width="62dp"
+            android:layout_height="52dp"
+            android:id="@+id/picture"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="333dp"
+            android:layout_marginTop="11dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="7dp"
+            android:src="@drawable/picture" />
     </RelativeLayout>
 <!-- 添加一个隐藏起来的textview，符合一定条件则让他显示出来  -->
     <TextView
