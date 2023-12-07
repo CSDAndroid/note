@@ -1,5 +1,6 @@
 package com.example.study1;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.WindowDecorActionBar;
@@ -10,10 +11,17 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.ImageSpan;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
@@ -22,8 +30,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -86,6 +99,7 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
         if (id == R.id.save_note){
             // 获取编辑文本的内容
             String content=et_Content.getText().toString();//获取文本编辑框（EditText）中的内容，并将其转换为字符串
+            String imagePath = "path_to_your_saved_image"; //// 保存图片的路径
             if(content==null){
 
                 Toast.makeText(MainActivity4.this,"内容不能为空！！",Toast.LENGTH_SHORT).show();//Toast在编辑页面弹出来
@@ -97,7 +111,7 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
                 String noteId =getIntent().getStringExtra("id");/////注意双引号里面的内容必须与前面传数据来的时候的键名一致，不要写成noteId！在mainactivity3中用了putExtra的方法传递值来这个页面，在这个页面中可以通过键名“id”来获取传过来的数据
             if(noteId!=null){/////注意使用这个if的判断条件
                 // 如果是，则更新原先笔记的内容
-                Boolean flag = myDBhelper.updateData(noteId, content);/////调用的是更新方法，和插入insert的方法不一样
+                Boolean flag = myDBhelper.updateData(noteId, content,getImageBytesFromPath(imagePath));/////调用的是更新方法，和插入insert的方法不一样
                 if (flag == true) {
                     setResult(2);
                     Toast.makeText(MainActivity4.this, "修改成功！！", Toast.LENGTH_SHORT).show();
@@ -107,7 +121,7 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
                 }
             }else {
                 //如果不是，则新增一条笔记
-                Boolean flag = myDBhelper.insertData(content);
+                Boolean flag = myDBhelper.insertData(content,getImageBytesFromPath(imagePath));
                 if (flag == true) {
                     //如果添加成功，将数据回传的结果码设置为2
                     setResult(2);
@@ -127,34 +141,51 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
 
         }
 }
-//重写 onActivityResult() 方法，并在其中获取选择的图片的 URI 并将其插入到笔记中。
+
+    private byte[] getImageBytesFromPath(String imagePath) {
+        File imgFile = new File(imagePath);
+        if (imgFile.exists()) {
+            Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            return stream.toByteArray();
+        } else {
+            return null;
+        }
+    }
+
+    //重写 onActivityResult() 方法，并在其中获取选择的图片的 URI 并将其插入到笔记中。
 @Override
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
         Uri imageUri = data.getData();
-        // 将图片转换为字节数组
-        byte[] imageData = getByteArrayFromUri(imageUri);
-        // 将图片插入到笔记中
-        String noteId =getIntent().getStringExtra("id");
-        MyDBhelper.insertImageIntoNote(noteId, imageData);
+
+        // 使用Glide加载图片并插入到EditText中
+        Glide.with(this)
+                .asBitmap()
+                .load(imageUri)
+                .into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        // 将图片插入到EditText中
+                        SpannableString spannableString = new SpannableString(" ");
+                        Drawable drawable = new BitmapDrawable(getResources(), resource);
+                        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+                        ImageSpan imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
+                        spannableString.setSpan(imageSpan, 0, 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+                        int cursorPosition = et_Content.getSelectionStart();
+                        et_Content.getText().insert(cursorPosition, spannableString);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                        // 这里可以处理加载失败的情况
+                    }
+                });
     }
 }
 
-    private byte[] getByteArrayFromUri(Uri uri) {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try {
-            InputStream inputStream = getContentResolver().openInputStream(uri);
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, bytesRead);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return outputStream.toByteArray();
-    }
 
 
 

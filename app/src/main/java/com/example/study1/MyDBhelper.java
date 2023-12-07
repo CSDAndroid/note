@@ -44,14 +44,15 @@ public class MyDBhelper extends SQLiteOpenHelper {//子承父类，名为mydb的
 //        return false;
 //    }
 
-    public boolean insertData(String content) {//定义了一个操作数据的方法，并返回一个布尔值来表示操作是否成功
-//格式化日期，把英文时间表达形式转换成中国的,设置日期格式
+    public boolean insertData(String content,byte[] imageData) {//定义了一个操作数据的方法，并返回一个布尔值来表示操作是否成功
+//格式化日期，把英文时间表达形式转换成中国的,设置日期格式                 //还要传插入图片的参数
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 hh:mm:ss");
         Date date = new Date(System.currentTimeMillis());//获取系统的日期，但是是以外国的形式显示
         String time = simpleDateFormat.format(date);//格式化日期
         ContentValues contentValues = new ContentValues();  //创建一个contentValues对象，用来存储记录的字段值，以键值对的方式存储，“键”对应的是插入记录的字段名，“值”对应某个字段具体值
         contentValues.put("content", content);//双引号为content：在oncreate方法中，内容的列名是content，在这个方法中列名必须与CREATE TABLE SQL语句定义的内容完全一致，不然insert方法无法1找到正确列
         contentValues.put("note_time", time);//系统的当前时间
+        contentValues.put("image_data",imageData);//////插入图片数据
         long i = db.insert("noteInfo", null, contentValues);  //这里用了一个insert方法哦
         if (i > 0) {
             return true;
@@ -70,13 +71,14 @@ public class MyDBhelper extends SQLiteOpenHelper {//子承父类，名为mydb的
             }
         }
         //修改数据，根据记录的id进行更新
-        public boolean updateData (String updateId, String updateContent){
+        public boolean updateData (String updateId, String updateContent,byte[] imageData){
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 hh:mm:ss");
             Date date = new Date(System.currentTimeMillis());//获取系统的日期，但是是以外国的形式显示
             String time = simpleDateFormat.format(date);//格式化日期
             ContentValues contentValues=new ContentValues();
             contentValues.put("content", updateContent);
             contentValues.put("note_time", time);/////注意双引号“”里面的内容必须和数据库的字段名一致
+            contentValues.put("image_data", imageData); // 更新图片数据
             int i=db.update("noteInfo",contentValues,"id=?",new String[]{updateId});
             if (i > 0) {
                 return true;
