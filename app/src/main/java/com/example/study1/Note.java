@@ -1,11 +1,14 @@
 package com.example.study1;
 
+import java.sql.Blob;
+
 //Note模型类：用来存放数据库表中的三个字段
 public class Note {
     //这三个属性将会用来存储数据库表当中三个字段的值
     private String id;
     private String content;
     private String note_time;
+    private String imageUri;////
 
     public String getId() {
         return id;
@@ -29,5 +32,13 @@ public class Note {
 
     public void setNote_time(String note_time) {
         this.note_time = note_time;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
+    }
+
+    public String getImageUri() {
+        return imageUri;
     }
 }

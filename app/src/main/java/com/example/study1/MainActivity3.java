@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,9 +94,11 @@ public class MainActivity3 extends AppCompatActivity{
                 String sendId=note.getId();
                 String sendContent=note.getContent();
                 String sendTime=note.getNote_time();
+                String sendImage=note.getImageUri();
                 intent.putExtra("id",sendId);
                 intent.putExtra("content",sendContent);/////打包数据
                 intent.putExtra("time",sendTime);
+                intent.putExtra("image_uri",sendImage);
                 startActivityForResult(intent,1);
             }
         });//一个新的监听器，监听用户点击目录下的哪一条item
@@ -235,7 +238,7 @@ public class MainActivity3 extends AppCompatActivity{
         if(resulList!=null){
             resulList.clear();
         }//清空一下上次列表中的内容，然后再执行下面的在数据库查询的工作，再添加内容
-        myDBhelper=new MyDBhelper(MainActivity3.this,"note.db",null,1);
+        myDBhelper=new MyDBhelper(MainActivity3.this,"note.db",null,4);
         resulList=myDBhelper.query();//把表中的数据存在这了
         myAdapter=new MyAdapter(MainActivity3.this,resulList);
         listView.setAdapter(myAdapter);
