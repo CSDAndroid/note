@@ -34,32 +34,17 @@ public class MainActivity3 extends AppCompatActivity{
 
     //下面的代码要用到哪个控件，就先在前面声明一下相应的对象，类似的，可以通过调用这些对象来操作这些组件，对象名可以和id不同，id是用来找到控件所在处而已
     private ListView listView;
-//    //SearchView searchView;////
-//    Object[] names;
-//    ArrayAdapter<String> adapter;
-//    ArrayList<String> mAllList = new ArrayList<String>();
-
     private ImageView add,search;
     private  MyDBhelper myDBhelper;//查询的过程通过该类（多个方法完成）
     private MyAdapter myAdapter;//显示数据需要适配器
     private List<Note> resulList;
 
-//    private SQLiteDatabase db;
-//    private TextView showInfo=findViewById(R.id.showInfo);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
         listView = findViewById(R.id.listview);//开始初始化这些控件对象，即找到这个对象对应的控件，即对这个对象下个定义
-
-//        initActionbar();
-//        names = loadData();
-//        listView = (ListView) findViewById(R.id.list);
-//        listView.setAdapter(new ArrayAdapter<Object>(getApplicationContext(), android.R.layout.simple_expandable_list_item_1, names));
-//        listView.setTextFilterEnabled(true);////
-//        searchView.setOnQueryTextListener(this);
-//        searchView.setSubmitButtonEnabled(false);
 
         add = findViewById(R.id.add);
         //定义一个add的点击事件，格式是对象名字.方法名字，括号里的参数写的是新创建一个监听器对象，格式是new View.OnClickListener
@@ -75,31 +60,28 @@ public class MainActivity3 extends AppCompatActivity{
             Log.w(TAG, "This is a warning log.");
             Log.e(TAG, "This is an error log.");
             Log.v(TAG, "This is a verbose log.");
-
-
         });
         //执行一个init方法进行数据的初始化
         init();
-
 
         //设置列表下的点击监听器，对相应内容进行更新
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 //当列表项被点击时，对该项的内容进行修改操作
-                Note note= (Note) myAdapter.getItem(position);//通过po把要修改的记录找出来
+                Note note = (Note) myAdapter.getItem(position);//通过po把要修改的记录找出来
                 //创建意图，将用户选中的内容传递到修改的页面
-                Intent intent=new Intent(MainActivity3.this,MainActivity4.class);
+                Intent intent = new Intent(MainActivity3.this, MainActivity4.class);
                 //把原先笔记的值放在这个内容中
-                String sendId=note.getId();
-                String sendContent=note.getContent();
-                String sendTime=note.getNote_time();
-                String sendImage=note.getImageUri();
-                intent.putExtra("id",sendId);
-                intent.putExtra("content",sendContent);/////打包数据
-                intent.putExtra("time",sendTime);
-                intent.putExtra("image_uri",sendImage);
-                startActivityForResult(intent,1);
+                String sendId = note.getId();
+                String sendContent = note.getContent();
+                String sendTime = note.getNote_time();
+                String sendImage = note.getImageUri();
+                intent.putExtra("id", sendId);
+                intent.putExtra("content", sendContent);/////打包数据
+                intent.putExtra("time", sendTime);
+                intent.putExtra("image_uri", sendImage);
+                startActivityForResult(intent, 1);
             }
         });//一个新的监听器，监听用户点击目录下的哪一条item
 
@@ -109,8 +91,8 @@ public class MainActivity3 extends AppCompatActivity{
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
                 //显示对话框删除
-                AlertDialog dialog=null;
-                AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity3.this);
+                AlertDialog dialog = null;
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity3.this);
                 AlertDialog finalDialog = dialog;
                 builder.setTitle("删除记录")
                         .setMessage("你确定要删除这条记录吗？")
@@ -118,12 +100,12 @@ public class MainActivity3 extends AppCompatActivity{
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 //确定要删除的记录是哪一条
-                                Note note= (Note) myAdapter.getItem(position);//把object强制转换为Note的子类对象
-                                String deleteId=note.getId();
-                                if( myDBhelper.deleteData(deleteId)){//调用删除的方法，只需要传入id就行，方法里定义的
+                                Note note = (Note) myAdapter.getItem(position);//把object强制转换为Note的子类对象
+                                String deleteId = note.getId();
+                                if (myDBhelper.deleteData(deleteId)) {//调用删除的方法，只需要传入id就行，方法里定义的
                                     init();//刷新数据
                                     Toast.makeText(MainActivity3.this, "删除成功！", Toast.LENGTH_SHORT).show();
-                                }else {
+                                } else {
                                     Toast.makeText(MainActivity3.this, "删除不成功！", Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -134,13 +116,13 @@ public class MainActivity3 extends AppCompatActivity{
                                 dialogInterface.dismiss();//让对话框消失
                             }
                         });
-                dialog=builder.create();//产生对话框对象
+                dialog = builder.create();//产生对话框对象
                 dialog.show();
                 return true;
             }
         });
 
-        search=findViewById(R.id.search);
+        search = findViewById(R.id.search);
         search.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -149,88 +131,7 @@ public class MainActivity3 extends AppCompatActivity{
             }
         });
 
-
-
-//        //初始化searchView
-//        SearchView searchView = findViewById(R.id.searchView);
-//        //加个监听器
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                // This method is called when the user submits a query.
-//                // Here you can implement the logic to filter your notes.
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                // This method is called when the query text is changed by the user.
-//                // Here you can implement the logic to filter your notes.
-//                return false;
-//            }
-//        });
-
-
-
-//        private void filterNotes (String query) {
-//            if (query == null || resulList == null || myAdapter == null || listView == null) {
-//                return;
-//            }
-//
-//            List<Note> filteredNotes = new ArrayList<>();
-//
-//            for (Note note : resulList) {
-//                String content = note.getContent();
-//                if (content != null && content.toLowerCase().contains(query.toLowerCase())) {
-//                    filteredNotes.add(note);
-//                }
-//            }
-//
-//            myAdapter = new MyAdapter(MainActivity3.this, filteredNotes);
-//            listView.setAdapter(myAdapter);
-//        }
-
     }
-
-//    private Object[] loadData() {
-//        mAllList.add("aa");
-//        mAllList.add("ddfa");
-//        mAllList.add("qw");
-//        mAllList.add("sd");
-//        mAllList.add("fd");
-//        mAllList.add("cf");
-//        mAllList.add("re");
-//        return mAllList.toArray();
-//    }
-//
-//    private void initActionbar() {
-//        // 自定义标题栏
-//        getActionBar().setDisplayShowHomeEnabled(false);
-//        getActionBar().setDisplayShowTitleEnabled(false);
-//        getActionBar().setDisplayShowCustomEnabled(true);
-//        LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        View mTitleView = mInflater.inflate(R.layout.custom_action_bar_layout,
-//                null);
-//        getActionBar().setCustomView(mTitleView);//
-//        searchView = (SearchView) mTitleView.findViewById(R.id.search_view);
-//    }
-//    @Override
-//    public boolean onQueryTextChange(String newText){
-//
-//        if (TextUtils.isEmpty(newText)) {
-//            // Clear the text filter.
-//            listView.clearTextFilter();
-//        } else {
-//            // Sets the initial value for the text filter.
-//            listView.setFilterText(newText.toString());
-//        }
-//        return false;
-//    }
-//    @Override
-//    public boolean onQueryTextSubmit(String query){
-//        //TODO Auto-generated method stub
-//        return false;
-//    }
 
 
     //这个方法用来查询数据库的内容，将表中的数据显在listview上面

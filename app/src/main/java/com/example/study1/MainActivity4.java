@@ -111,7 +111,7 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
 
         pic_select.setOnClickListener(this);
 
-        // 获取Intent中传递的内容
+        // 获取Intent中传递的内容，即保证每次打开一条item的时候，都会显示先前编辑好的文本和图片
 
         String contentFromIntent = getIntent().getStringExtra("content");
 
@@ -123,7 +123,7 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
 
         }
         ////// Load the image from the saved URI, if available
-        String imageUri = getIntent().getStringExtra("image_uri");
+        String imageUri = getIntent().getStringExtra("image_uri");//注意！！这里的字段名不能错！！
         if (imageUri != null) {
             selectedImageUri = Uri.parse(imageUri);
             Glide.with(this)
@@ -195,17 +195,21 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
 
                 String noteId = getIntent().getStringExtra("id");/////注意双引号里面的内容必须与前面传数据来的时候的键名一致，不要写成noteId！在mainactivity3中用了putExtra的方法传递值来这个页面，在这个页面中可以通过键名“id”来获取传过来的数据
 
-//                String imageUri = selectedImageUri != null ? selectedImageUri.toString() : "";
                 if (noteId != null) {/////注意使用这个if的判断条件
                     // 如果是，则更新原先笔记的内容
-                    String imageUri = "";/////如果没有这个，selectedImageUri会被认为是一个空指针
+
+                    String imageUri = "";/////确保在没有有效的 selectedImageUri 时，imageUri 仍然有一个非空的初始值。这样，即使没有选择图片，imageUri 也不会是 null，而是一个空字符串。
                     if (selectedImageUri != null) { // Check if an image has been selected
+
                         imageUri = selectedImageUri.toString(); // Get the selected image's URI as a string
                         Log.d("TAG", "onClick: "+imageUri.toString());
+
                     }else {
                         Log.d("TAG", "onClick: "+"-=-=-=-=-=-=-=-=selectedImageUri is null!!!!!!!!!!!=-=--=-=-=-=-=-=-");
                     }
+
                     Boolean flag = myDBhelper.updateData(noteId, content, imageUri);/////调用的是更新方法，和插入insert的方法不一样
+
                     if (flag == true) {
                         setResult(2);
                         Toast.makeText(MainActivity4.this, "修改成功！！", Toast.LENGTH_SHORT).show();
@@ -219,8 +223,6 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
                     if (selectedImageUri != null) { // Check if an image has been selected
                         imageUri = selectedImageUri.toString(); // Get the selected image's URI as a string
                     }
-//                    String imageUri = selectedImageUri != null ? selectedImageUri.toString() : "";
-                    //Log.d("TAG", "onActivityResult: "+imageUri.toString());
 
                     Boolean flag = myDBhelper.insertData(content,imageUri);
                     if (flag == true) {

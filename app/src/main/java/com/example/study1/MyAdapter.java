@@ -2,6 +2,7 @@ package com.example.study1;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ public class MyAdapter extends BaseAdapter implements Filterable {
     //layoutInflater用于将某个布局转化为View对象，类似于简化打包
     private LayoutInflater layoutInflater;
     private List<Note> mOriginalValues;
-    private List<Note> mDisplayedValues;
+    private List<Note> mDisplayedValues;//mNoteList
     private LayoutInflater mInflater;
     private ItemFilter mFilter = new ItemFilter();
     //当创建MyAdapter适配器对象时，我们需要先准备好list的数据，为了拿到list的数据，可以为MyAdapter这个类加上一个构造器
@@ -33,9 +34,10 @@ public class MyAdapter extends BaseAdapter implements Filterable {
         this.mDisplayedValues = list;
         mInflater = LayoutInflater.from(context);
     }//这是MyAdapter类的构造函数
+
     @Override
     public int getCount() {
-        return list.size();   //返回记录的总条数，即list集合中的元素个数
+        return mDisplayedValues.size();   //返回记录的总条数，即list集合中的元素个数
     }
 //获取item数量
     @Override//position指的是集合list里的元素下标，从0开始，然后适配器自动执行后，position就执行下一个item的内容，即pst=1.。。
@@ -74,34 +76,62 @@ public class MyAdapter extends BaseAdapter implements Filterable {
             t_time=view.findViewById(R.id.item_time);
         }
     }
+
+    // 实现 Filterable 接口的方法
     @Override
     public Filter getFilter() {
+        //验证过滤器是否被调用
+        Log.d("Filter", "getFilter() called"+"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-");
         return mFilter;
     }
 
+
+    //刷新列表的方法
+    //// 恢复原始数据源的方法，解决只能搜索一次的问题的
+    //用于恢复适配器的数据源为原始数据源
+    public void refreshList(List<Note> newList) {
+        mOriginalValues = new ArrayList<>(newList);
+        notifyDataSetChanged();
+    }
+
     private class ItemFilter extends Filter {
+//        private boolean isOriginalListRestored = false; // 标记是否恢复了原始数据源
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
+            Log.d("Filter", "performFiltering() called with constraint: " + constraint);
             FilterResults results = new FilterResults();
+            List<Note> filteredList = new ArrayList<>();
+
             if (TextUtils.isEmpty(constraint)) {
-                results.values = mOriginalValues;
-                results.count = mOriginalValues.size();
+                // 如果搜索关键字为空，则显示完整的数据源
+//                results.values = mOriginalValues;
+//                results.count = mOriginalValues.size();
+//                    filteredList.addAll(mOriginalValues);
+                filteredList = new ArrayList<>(mOriginalValues);
+                Log.d("filteredList", "displayList is ready!!!!!!!!!!!!!!!!"+"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-");
             } else {
-                List<Note> filteredList = new ArrayList<>();
+                // 过滤数据源，只保留包含搜索关键字的笔记
+                //List<Note> filteredList = new ArrayList<>();
+                String filterPattern = constraint.toString().toLowerCase().trim();
                 for (Note note : mOriginalValues) {
                     if (note.getContent().toLowerCase().contains(constraint.toString().toLowerCase())) {//
                         filteredList.add(note);
                     }
                 }
-                results.values = filteredList;
-                results.count = filteredList.size();
             }
+            results.values = filteredList;
+            results.count = filteredList.size();///为什么这两行放三个花括号的外面
+            //验证过滤器的执行,这里不能正常执行
+            Log.d("Filter", "performFiltering() called with constraint: " + constraint+"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            Log.d("Filter", "performFiltering() finished");
             return results;
         }
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            mDisplayedValues = (List<Note>) results.values;
+            mDisplayedValues.clear();
+            mDisplayedValues.addAll((List<Note>) results.values);
+//            mDisplayedValues = (List<Note>) results.values;
             notifyDataSetChanged();
         }
     }

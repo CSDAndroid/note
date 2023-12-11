@@ -24,13 +24,13 @@
         android:layout_below="@+id/title" />
 
     <ImageView
-        android:layout_width="156dp"
-        android:layout_height="96dp"
+        android:id="@+id/add"
+        android:layout_width="108dp"
+        android:layout_height="82dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="0dp"
-        android:paddingBottom="30dp"
-        android:id="@+id/add"
+        android:paddingBottom="22dp"
         android:src="@drawable/add" />
 
     <ImageView
