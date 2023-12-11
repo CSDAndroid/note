@@ -125,10 +125,10 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
         ////// Load the image from the saved URI, if available
         String imageUri = getIntent().getStringExtra("image_uri");//注意！！这里的字段名不能错！！
         if (imageUri != null) {
-            selectedImageUri = Uri.parse(imageUri);
-            Glide.with(this)
-                    .load(selectedImageUri)
-                    .into(picture);
+            selectedImageUri = Uri.parse(imageUri);//Uri.parse 方法可以将一个字符串形式的 URI 转换为 Uri 对象
+            Glide.with(this)//建一个 Glide 的实例，并将当前活动的 Context 对象传入
+                    .load(selectedImageUri) //加载 URI 对应的图片
+                    .into(picture); //将加载的图片设置到 ImageView 中
         }
 
     }

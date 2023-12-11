@@ -89,7 +89,8 @@ public class MyAdapter extends BaseAdapter implements Filterable {
     //刷新列表的方法
     //// 恢复原始数据源的方法，解决只能搜索一次的问题的
     //用于恢复适配器的数据源为原始数据源
-    public void refreshList(List<Note> newList) {
+    public void refreshList(List<Note> newList) {  /////注意在使用这个方法的时候括号里面传的参数是一个 List<Note> 类型的对象，
+                                           //传参前需要查询查询数据库并得到一个对象（直接用qurry方法），再把这个对象传进去，代表原始数据列表
         mOriginalValues = new ArrayList<>(newList);
         notifyDataSetChanged();
     }

@@ -45,7 +45,6 @@ public class MainActivity3 extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
         listView = findViewById(R.id.listview);//开始初始化这些控件对象，即找到这个对象对应的控件，即对这个对象下个定义
-
         add = findViewById(R.id.add);
         //定义一个add的点击事件，格式是对象名字.方法名字，括号里的参数写的是新创建一个监听器对象，格式是new View.OnClickListener
         add.setOnClickListener(view -> {//当点击按钮时会触发这个监听器里的代码
