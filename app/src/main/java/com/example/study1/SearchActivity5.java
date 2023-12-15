@@ -43,7 +43,7 @@ public class SearchActivity5 extends AppCompatActivity {
         mListView.setAdapter(adapter);
         mListView.setTextFilterEnabled(true);
 
-        // 设置搜索文本监听
+        // 设置搜索文本监听，给列表设置点击的事件
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             // 当点击搜索按钮时触发该方法
             @Override

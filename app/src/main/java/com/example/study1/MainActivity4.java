@@ -76,9 +76,7 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
 
     private static final int PICK_IMAGE_REQUEST = 1;//在启动图片选择器的时候，你可以使用这个常量作为请求的标识，然后在 onActivityResult() 方法中根据这个标识来处理返回的结果。
 
-    private ImageView delete,saveNote,picture,pic_select;
-
-    private Button backHome;
+    private ImageView delete,saveNote,picture,pic_select,backHome;
 
     private TextView showTime;
 

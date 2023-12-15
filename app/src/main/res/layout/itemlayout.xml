@@ -9,9 +9,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/item_content"
         android:text="文本信息。。。"
-        android:textColor="@color/black"
+        android:textColor="#AE000000"
         android:textSize="20dp"
-        android:maxLines="2"
+        android:maxLines="1"
         android:ellipsize="end">
     </TextView>
     <TextView
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/item_time"
         android:text="时间信息。。。"
-        android:textColor="#FF0101"
+        android:textColor="#ADFF0101"
         android:textSize="15dp"
       >
     </TextView>

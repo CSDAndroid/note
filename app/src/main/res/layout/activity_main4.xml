@@ -16,16 +16,17 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="^_^"
-            android:textSize="30sp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            android:textSize="30sp" />
 
-        <Button
+        <ImageView
             android:id="@+id/backhome"
-            android:layout_width="78dp"
+            android:layout_width="49dp"
             android:layout_height="wrap_content"
-            android:backgroundTint="#DF4F65FF"
-            android:text="返回"
-            android:textSize="15sp" />
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="362dp"
+            android:src="@drawable/back2"
+            android:text="返回" />
 
         <ImageView
             android:id="@+id/pic_select"
@@ -42,10 +43,11 @@
             android:src="@drawable/picture" />
     </RelativeLayout>
 <!-- 添加一个隐藏起来的textview，符合一定条件则让他显示出来  -->
+
     <TextView
         android:id="@+id/showTime"
-        android:layout_width="168dp"
-        android:layout_height="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="12dp"
         android:layout_gravity="center"
         android:text="显示时间。。。"
         android:textColor="#ADF60F0F"
@@ -54,14 +56,15 @@
 
     <ImageView
         android:id="@+id/picture"
-        android:layout_width="180dp"
-        android:layout_height="156dp"
+        android:layout_width="231dp"
+        android:layout_height="185dp"
         android:layout_gravity="center" />
 
     <EditText
         android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="510dp"
+        android:layout_height="500dp"
+        android:textColor="#AE000000"
         android:hint="记录今日一事..." />
 
     <LinearLayout
@@ -74,14 +77,14 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/delete" />
+            android:src="@drawable/delete2" />
 
         <ImageView
             android:id="@+id/save_note"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/save"/>
+            android:src="@drawable/save2"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -18,7 +18,7 @@ import java.util.List;
 public class MyAdapter extends BaseAdapter implements Filterable {
     //使用list<Note>,list集合会存储数据库中note表的所有记录.....适配器的数据来自于list
     //此行声明一个 List<Note> 类型的私有实例变量 list 。该列表将存储适配器将在 ListView 中显示的数据
-    private List<Note> list;
+    private List<Note> list;//这个集合用来存数据表中的所有记录，如n1，n2......
     //layoutInflater用于将某个布局转化为View对象，类似于简化打包
     private LayoutInflater layoutInflater;
     private List<Note> mOriginalValues;
@@ -32,7 +32,7 @@ public class MyAdapter extends BaseAdapter implements Filterable {
         this.list=list;
         this.mOriginalValues = list;
         this.mDisplayedValues = list;
-        mInflater = LayoutInflater.from(context);
+        mInflater = layoutInflater.from(context);
     }//这是MyAdapter类的构造函数
 
     @Override
@@ -41,7 +41,7 @@ public class MyAdapter extends BaseAdapter implements Filterable {
     }
 //获取item数量
     @Override//position指的是集合list里的元素下标，从0开始，然后适配器自动执行后，position就执行下一个item的内容，即pst=1.。。
-    public Object getItem(int position) {
+    public Object getItem(int position) {//返回一个Object
         return list.get(position);//点击哪项就获取该项的记录内容即获取Note对象，Note对象对应表中某条记录，get是用来获取集合list中某一个元素的方法
     }
 //position记录当前的item序号，从0开始，该方法获取某个item对象（例如用户点击哪条就返回哪条的）
@@ -54,22 +54,23 @@ public class MyAdapter extends BaseAdapter implements Filterable {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if(convertView==null){
-            convertView=layoutInflater.inflate(R.layout.itemlayout,null,false);//把itemlayout布局转换成了一个视图对象,以便在Activity中使用
-            viewHolder=new ViewHolder(convertView);//对应下面那个优化方案里面的内容
-            convertView.setTag(viewHolder);
+            convertView=layoutInflater.inflate(R.layout.itemlayout,null,false);//把itemlayout布局转换成了一个视图对象converView,以便在Activity中使用
+            viewHolder=new ViewHolder(convertView);//对应下面那个优化方案里面的内容，对应下面那个构造函数，把这个itemlayout布局传进去，在view那个位置，即在itemlayout中找那两个视图对象
+            convertView.setTag(viewHolder);//用setTag方法把这个数据内容加载给这个视图对象
         }else {
             viewHolder= (ViewHolder) convertView.getTag();//又用gettag方法获取加载的内容并存好
         }
+
         //将数据库中的内容加载到对应的控件上
-        Note note= (Note) getItem(position);//把这条记录存的内容给note，就那三个图的过程
-        viewHolder.t_content.setText(note.getContent());
+        Note note= (Note) getItem(position);//这个方法是上面写的，返回的就是一个note对象（某条记录），把这条记录存的内容给note，就那三个图的过程
+        viewHolder.t_content.setText(note.getContent());//取这条记录里的t_content属性的值放在适配器的t_content上
         viewHolder.t_time.setText(note.getNote_time());
         return convertView;
     }   //用于配置listview要加载的内容，包括视图和数据项
     //将item.xml文件找出来并转换成View对象，就是在这里定义一个变量然后把找到的view用那个变量储存起来
 
     //listview的优化方案，防止向下滑动的内容无上限，让手机死机
-    class ViewHolder{//设计一个类，用于给item的视图加载数据内容
+    class ViewHolder{//设计一个类，用于给item的视图加载数据内容,即找视图对象
         TextView t_content,t_time;//定义两个变量，以便于之后修改相应布局里的内容
         public ViewHolder(View view){//传入一个view对象
             t_content=view.findViewById(R.id.item_content);//把对应的视图赋给对象，把找这两个对象的过程封装在这个class类当中
