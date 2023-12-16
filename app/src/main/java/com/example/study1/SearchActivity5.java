@@ -1,8 +1,10 @@
 package com.example.study1;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -91,6 +94,43 @@ public class SearchActivity5 extends AppCompatActivity {
             }
         });//一个新的监听器，监听用户点击目录下的哪一条item
 
+        //列表项长按监听器，删除对应项的内容
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+                //显示对话框删除
+                AlertDialog dialog = null;
+                AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity5.this);
+                AlertDialog finalDialog = dialog;
+                builder.setTitle("删除记录")
+                        .setMessage("你确定要删除这条记录吗？")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {//第二个参数是加个监听器
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //确定要删除的记录是哪一条
+                                Note note = (Note) adapter.getItem(position);//把object强制转换为Note的子类对象
+                                String deleteId = note.getId();
+                                if (myDBhelper.deleteData(deleteId)) {//调用删除的方法，只需要传入id就行，方法里定义的
+                                    minit();//刷新数据
+                                    Toast.makeText(SearchActivity5.this, "删除成功！", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(SearchActivity5.this, "删除不成功！", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();//让对话框消失
+                            }
+                        });
+                dialog = builder.create();//产生对话框对象
+                dialog.show();
+                return true;
+            }
+        });
+
+
         back5=findViewById(R.id.back5);
         back5.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,5 +140,15 @@ public class SearchActivity5 extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void minit() {
+        if(resulList!=null){
+            resulList.clear();
+        }//清空一下上次列表中的内容，然后再执行下面的在数据库查询的工作，再添加内容
+        myDBhelper=new MyDBhelper(SearchActivity5.this,"note.db",null,4);
+        resulList=myDBhelper.query();//把表中的数据存在这了
+        MyAdapter adapter=new MyAdapter(SearchActivity5.this,resulList);
+        mListView.setAdapter(adapter);
     }
 }

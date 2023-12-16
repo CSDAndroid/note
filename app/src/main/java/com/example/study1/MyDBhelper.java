@@ -100,18 +100,6 @@ public class MyDBhelper extends SQLiteOpenHelper {//子承父类，名为mydb的
         return  list;
     }
 
-    //将图片数据插入笔记中的方法
-//    public static boolean insertImageIntoNote(String noteId, byte[] imageData) {
-//        ContentValues contentValues = new ContentValues();
-//        contentValues.put("image_data", imageData);
-//        int i = db.update("noteInfo", contentValues, "id=?", new String[]{noteId});
-//        if (i > 0) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-
 
     //重写升级方法
         @Override
